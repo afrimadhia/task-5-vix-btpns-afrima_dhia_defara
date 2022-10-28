@@ -26,6 +26,8 @@ func main() {
 	r.POST("/signup", controllers.SignupPost)
 	r.GET("/upload", middleware.Authorization, controllers.CreateFilesGet)
 	r.POST("/upload", middleware.Authorization, controllers.CreateFilesPost)
+	// r.GET("/update", middleware.Authorization, controllers.UpdateFilesGet)
+	// r.POST("/update", middleware.Authorization, controllers.UpdateFilesPost)
 
 	r.Run()
 }

@@ -27,7 +27,9 @@
         <form action="/login" method="post">
             <h4>SIGN IN</h4>
             <p>Masukkan Username dan Password</p>
-            <center style="font-weight: bold;">{{.message}}</center>
+            {{if .message}}
+            <div class="alert alert-danger">{{.message}}</div>
+            {{end}}
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" name="username">

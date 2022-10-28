@@ -80,7 +80,7 @@ func LoginPost(c *gin.Context) {
 // LOGOUT
 func Logout(c *gin.Context) {
 	c.SetCookie("Auth", "", -1, "", "", false, true)
-	c.HTML(http.StatusOK, "login.html", gin.H{})
+	c.Redirect(http.StatusFound, "/login")
 }
 
 // SIGNUP
@@ -155,9 +155,71 @@ func CreateFilesPost(c *gin.Context) {
 		return
 	}
 
+	//upload data to database
+	filePh := models.FilePhoto{PhotoName: file.Filename, PhotoPath: "assets/uploads/"}
+	resultPhoto := config.DB.Create(&filePh)
+
+	if resultPhoto.Error != nil {
+		c.HTML(http.StatusBadRequest, "upload.html", gin.H{
+			"error": "Failed to upload image",
+		})
+	}
+
 	//respond
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"image":   "assets/uploads/" + file.Filename,
 		"message": "Upload Berhasil",
 	})
 }
+
+// // UPDATE FILES
+
+// func UpdateFilesGet(c *gin.Context) {
+// 	user, _ := c.Get("user")
+
+// 	if user.(models.Users).ID == 0 {
+// 		c.HTML(http.StatusUnauthorized, "login.html", gin.H{})
+// 	} else {
+// 		c.HTML(http.StatusOK, "update.html", gin.H{})
+// 	}
+// }
+
+// func UpdateFilesPost(c *gin.Context) {
+// 	// single file
+// 	file, err := c.FormFile("image")
+
+// 	if err != nil {
+// 		c.HTML(http.StatusBadRequest, "upload.html", gin.H{
+// 			"error": "Failed to upload image",
+// 		})
+// 		return
+// 	}
+
+// 	//save file
+// 	err = c.SaveUploadedFile(file, "assets/uploads/"+file.Filename)
+
+// 	if err != nil {
+// 		c.HTML(http.StatusBadRequest, "upload.html", gin.H{
+// 			"error": "Failed to upload image",
+// 		})
+// 		return
+// 	}
+
+// 	//upload data to database
+// 	config.DB.First(&models.FilePhoto)
+
+// 	resultPhoto := config.DB.Update(&filePh)
+
+// 	if resultPhoto.Error != nil {
+// 		c.HTML(http.StatusBadRequest, "upload.html", gin.H{
+// 			"error": "Failed to upload image",
+// 		})
+// 	}
+
+// 	//respond
+// 	c.HTML(http.StatusOK, "index.html", gin.H{
+// 		"image":   "assets/uploads/" + file.Filename,
+// 		"message": "Upload Berhasil",
+// 	})
+
+// }
